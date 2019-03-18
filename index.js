@@ -10,7 +10,7 @@ app.get('/',(req,res)=>{
 })
 
 app.get('/test',(req,res) => {
-    res.sendFile(__dirname+'/test.html')
+    res.sendFile(__dirname+'/player.html')
 })
 
 app.get('/ref',(req,res)=> {
