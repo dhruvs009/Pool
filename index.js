@@ -2,6 +2,8 @@ var express=require('express');
 const app=express();
 var http= require('http').Server(app);
 var io=require('socket.io')(http);
+var freeCalled=false;
+
 
 app.use(express.static('public'));
 
@@ -9,23 +11,22 @@ app.get('/', (req,res) =>{
     res.redirect('/pc')
 })
 
-app.get('/pc',(req,res)=>{
-    res.sendfile(__dirname+'/pc.html')
-})
-
-app.get('/player',(req,res) => {
+app.get('/player',(req,res)=>{
     res.sendFile(__dirname+'/player.html')
 })
 
+app.get('/pc',(req,res) => {
+    res.sendFile(__dirname+'/pc.html')
+})
+
 app.get('/ref',(req,res)=> {
-    res.sendfile(__dirname+'/ref.html')
+    res.sendFile(__dirname+'/ref.html')
 })
 
 app.get('/game',(req,res) => {
     res.sendFile(__dirname+'/game.html')
 })
 
-var temp;
 var players={player0: null, player1: null, ref: null};
 
 
@@ -34,11 +35,10 @@ io.on('connection',function(socket){
         io.emit('getplayers',players);
         console.log(players);
     }
-    // console.log(socket.id+" connected");
     socket.on('disconnect',function(){
         if(players.player0!=null && players.player0.id==socket.id){
-            players.player0=null;
             players.player0=players.player1;
+            players.player1=null;
         }
         if(players.player1!=null && players.player1.id==socket.id){
             players.player1=null;
@@ -79,6 +79,10 @@ io.on('connection',function(socket){
             }
         }
         refresh();
+    })
+    socket.on('freeball',function(msg){
+        //console.log(msg);
+        io.emit('placeball',msg);
     })
 })
 
