@@ -215,14 +215,14 @@ function setup(){
     socket=io.connect();
     socket.on('getplayers',function(msg){
         if(msg.player0.y==0 || msg.player0.y>windowHeight/2){
-            rot[0]=-msg.player0.orientation;
+            rot[0]=-msg.player0.orientation+msg.ref.orientation;
             posFixed[0]=false;
         }
         else{
             posFixed[0]=true;
         }
         if(msg.player1.y==0 || msg.player1.y>windowHeight/2){
-            rot[1]=-msg.player1.orientation;
+            rot[1]=-msg.player1.orientation+msg.ref.orientation;
             posFixed[1]=false;
         }
         else{
